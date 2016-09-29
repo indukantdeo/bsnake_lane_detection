@@ -9,10 +9,6 @@ using namespace std;
 int lowThreshold=70;
 int highThreshold=150;
 
-void extract_segments(Mat img_segments[], Mat img,int segments[], int n_segments);
-
-Mat find_edges(Mat img);
-
 int main()
 {
 	//initialize important variables here
@@ -88,7 +84,98 @@ int main()
   	merge_segments(line_segments, line, segments, n_segments);
   	imshow("detected lines",line);
 
+  	for(i=0;i<n_segments;i++)
+  		cout<<i<<": "<<lines[i].size()<<endl;
 
+  	int vanish_row_vote[2000]={0};
+
+  	int cum_sum=1000;
+
+  	for(i=4;i>=2;i--)
+  	{
+  		cum_sum-=segments[i];
+  		for(j=0;j<lines[i].size();j++)
+  			for(k=0;k<lines[i].size();k++)
+  			{
+  				if(j==k)
+  					continue;
+
+  				int vanish_row=find_intersection(lines[i][j], lines[i][k])+cum_sum;
+
+  				if(vanish_row>-1000 && vanish_row<1000)
+  					vanish_row_vote[1000-vanish_row]++;
+  			}
+  	}
+
+  	int current_votes=0;
+  	int max_votes=-1, max_i=-1;
+  	for(i=0;i<50;i++)
+  		current_votes+=vanish_row_vote[i];
+
+  	for(i=50;i<2000;i++)
+  	{
+  		current_votes+=vanish_row_vote[i];
+  		current_votes-=vanish_row_vote[i-50];
+
+  		if(current_votes>=max_votes)
+  		{
+  			max_votes=current_votes;
+  			max_i=i;
+  		}
+
+  		//cout<<i<<" "<<current_votes<<endl;
+  	}
+
+  	int vanish_row=max_i-25;
+
+  	cout<<"Vanishing row: "<<vanish_row<<" with votes: "<<max_votes<<endl;
+
+  	Mat output(1200, 1000, CV_8UC3, Scalar(0));
+  	line.copyTo(output(cv::Rect(0, 200, 1000, 1000)));
+  	cv::line( output, Point(0, 1200-vanish_row), Point(1000, 1200-vanish_row), Scalar(255,0,0), 10, CV_AA, 0);
+  	//line( output, Point(0, 1000-vanish_row), Point(1000, 1000-vanish_row), Scalar(255,0,0), 10, CV_AA);
+
+
+  	imshow("output", output);
+
+  	Mat lanes(1000, 1000, CV_8UC3, Scalar(0));
+  	Mat lanes_segments[n_segments];
+  	extract_segments(lanes_segments, lanes, segments, n_segments);
+
+  	cum_sum=1000;
+  	for(i=4;i>=2;i--)
+  	{
+  		cum_sum-=segments[i];
+  		for(j=0;j<lines[i].size();j++)
+  			for(k=0;k<lines[i].size();k++)
+  			{
+  				if(j==k)
+  					continue;
+
+  				int vanishRow=find_intersection(lines[i][j], lines[i][k])+cum_sum;
+
+  				if(1000-vanishRow>= vanish_row-50 && 1000-vanishRow<= vanish_row+50)
+  				{
+  					if(i==4)
+  						cout<<"yay"<<endl;
+
+  					cv::line( lanes_segments[i], Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
+  					cv::line( lanes_segments[i], Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
+
+  					/*Mat temp(segments[i], 1000, CV_8UC3, Scalar(0));
+  					cv::line( temp, Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
+  					cv::line( temp, Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
+
+  					imshow("verify", temp);*/
+
+  					//waitKey(100);
+
+  				}	
+  			}
+  	}
+  	merge_segments(lanes_segments, lanes, segments, n_segments);
+
+  	imshow("wohoo!", lanes);
 
 	imshow("edges", edges);
 	waitKey(0);

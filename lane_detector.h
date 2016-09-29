@@ -8,6 +8,24 @@ using namespace cv;
 extern int lowThreshold;
 extern int highThreshold;
 
+int find_intersection(Vec4i l1, Vec4i l2)
+{
+	double m1, m2, c1, c2;
+
+	m1=((double)l1[3]-l1[1])/((double)l1[2]-l1[0]);
+	c1=(double)l1[3]-m1*l1[2];
+
+	m2=((double)l2[3]-l2[1])/((double)l2[2]-l2[0]);
+	c2=(double)l2[3]-m2*l2[2];
+
+	double yi, xi;
+
+	xi=(c1-c2)/(m2-m1);
+	yi=m2*xi+c2;
+
+	return (int)yi;
+}
+
 void extract_segments(Mat img_segments[], Mat img,int segments[], int n_segments)
 {
 	int i, cum_length=0;
