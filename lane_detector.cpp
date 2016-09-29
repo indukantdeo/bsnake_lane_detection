@@ -17,7 +17,7 @@ int main()
 	Mat img_segments[5];
 	std::stringstream window_name;
 
-	cv::Mat img=cv::imread("images/l3.jpg", CV_LOAD_IMAGE_COLOR);
+	cv::Mat img=cv::imread("images/l1.jpg", CV_LOAD_IMAGE_COLOR);
 	cv::resize(img, img, cv::Size(1000,1000));
 	imshow("lanes", img);
 
@@ -53,7 +53,7 @@ int main()
   	}*/
 
 	vector<Vec4i> lines[n_segments];
-	int hough_threshold[5]={30, 30, 30, 50, 100};
+	int hough_threshold[5]={30, 30, 40, 50, 100};
 	int hough_minLineLength[5]={20, 25, 25, 30, 80};
 	for(i=0; i<n_segments ;i++)
 		HoughLinesP(img_segments[i], lines[i], 1, CV_PI/180, hough_threshold[i], hough_minLineLength[i], 50 );
@@ -85,13 +85,12 @@ int main()
   	imshow("detected lines",line);
 
   	for(i=0;i<n_segments;i++)
-  		cout<<i<<": "<<lines[i].size()<<endl;
+  		cout<<"#lines for "<<i<<": "<<lines[i].size()<<endl;
 
   	int vanish_row_vote[2000]={0};
 
   	int cum_sum=1000;
-
-  	for(i=4;i>=2;i--)
+  	for(i=4;i>=3;i--)
   	{
   		cum_sum-=segments[i];
   		for(j=0;j<lines[i].size();j++)
@@ -101,6 +100,18 @@ int main()
   					continue;
 
   				int vanish_row=find_intersection(lines[i][j], lines[i][k])+cum_sum;
+
+  				/*for checking intersection function
+  				Mat ci(1000, 1000, CV_8UC3, Scalar(0));
+  				Mat cs[5];
+  				extract_segments(cs, ci, segments, n_segments);
+  				cv::line( cs[i], Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
+  				cv::line( cs[i], Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
+  				merge_segments(cs, ci, segments, n_segments);
+  				imshow("check", ci);
+
+  				cout<<1000-vanish_row<<endl;
+  				waitKey(2000);*/
 
   				if(vanish_row>-1000 && vanish_row<1000)
   					vanish_row_vote[1000-vanish_row]++;
@@ -175,6 +186,17 @@ int main()
   	}
   	merge_segments(lanes_segments, lanes, segments, n_segments);
 
+  	for(i=1000-vanish_row+150;i>=0;i--)
+  		for(j=0;j<img.cols;j++)
+  			lanes.at<Vec3b>(i, j)={0, 0, 0};
+
+  	for(i=0;i<img.rows;i++)
+  		for(j=0;j<img.cols;j++)
+  			if(lanes.at<Vec3b>(i, j)[0]==255)
+  				img.at<Vec3b>(i, j)={255, 0, 0};
+
+
+  	imshow("yay", img);
   	imshow("wohoo!", lanes);
 
 	imshow("edges", edges);
