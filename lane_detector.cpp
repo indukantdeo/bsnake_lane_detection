@@ -53,8 +53,8 @@ int main()
   	}*/
 
 	vector<Vec4i> lines[n_segments];
-	int hough_threshold[5]={30, 30, 40, 50, 100};
-	int hough_minLineLength[5]={20, 25, 25, 30, 80};
+	int hough_threshold[5]={30, 30, 40, 50, 50};
+	int hough_minLineLength[5]={20, 25, 25, 30, 50};
 	for(i=0; i<n_segments ;i++)
 		HoughLinesP(img_segments[i], lines[i], 1, CV_PI/180, hough_threshold[i], hough_minLineLength[i], 50 );
 
@@ -101,8 +101,8 @@ int main()
 
   				int vanish_row=find_intersection(lines[i][j], lines[i][k])+cum_sum;
 
-  				/*for checking intersection function
-  				Mat ci(1000, 1000, CV_8UC3, Scalar(0));
+  				//for checking intersection function
+  				/*Mat ci(1000, 1000, CV_8UC3, Scalar(0));
   				Mat cs[5];
   				extract_segments(cs, ci, segments, n_segments);
   				cv::line( cs[i], Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
@@ -165,28 +165,30 @@ int main()
 
   				int vanishRow=find_intersection(lines[i][j], lines[i][k])+cum_sum;
 
-  				if(1000-vanishRow>= vanish_row-50 && 1000-vanishRow<= vanish_row+50)
+  				if(1000-vanishRow>= vanish_row-20 && 1000-vanishRow<= vanish_row+20)
   				{
   					if(i==4)
-  						cout<<"yay"<<endl;
+  						cout<<"yay"<<j<<endl;
+
 
   					cv::line( lanes_segments[i], Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
   					cv::line( lanes_segments[i], Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
+  					/*imshow("please", lanes_segments[i]);
 
-  					/*Mat temp(segments[i], 1000, CV_8UC3, Scalar(0));
+  					Mat temp(segments[i], 1000, CV_8UC3, Scalar(0));
   					cv::line( temp, Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
   					cv::line( temp, Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
 
-  					imshow("verify", temp);*/
+  					imshow("verify", temp);
 
-  					//waitKey(100);
+  					waitKey(2000);*/
 
   				}	
   			}
   	}
   	merge_segments(lanes_segments, lanes, segments, n_segments);
 
-  	for(i=1000-vanish_row+150;i>=0;i--)
+  	for(i=1000-vanish_row;i>=0;i--)
   		for(j=0;j<img.cols;j++)
   			lanes.at<Vec3b>(i, j)={0, 0, 0};
 

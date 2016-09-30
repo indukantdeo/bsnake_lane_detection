@@ -23,6 +23,10 @@ int find_intersection(Vec4i l1, Vec4i l2)
 	xi=(c1-c2)/(m2-m1);
 	yi=m2*xi+c2;
 
+	//if lines are parallel and on road surface but orientation not correct
+	if(int(xi)<-200 || int(xi)>1200)
+		return 10000;
+
 	return (int)yi;
 }
 
@@ -62,12 +66,26 @@ void merge_segments(Mat img_segments[],Mat img, int segments[], int n_segments)
 Mat find_edges(Mat img)
 {
 	//directly in single channel
-	Mat edges;
+	Mat edges, img_ycrcb, shadow_rem, shadow, ycrcb_channels[3];
+
+	/*cvtColor(img, img_ycrcb, CV_BGR2YCrCb);
+	split(img,ycrcb_channels);
+	shadow=ycrcb_channels[0];
+	imshow("shadows", shadow);
+	ycrcb_channels[0]=Mat::zeros(img.rows, img.cols, CV_8UC1);
+	merge(ycrcb_channels, 3, shadow_rem);
+	imshow("shadow removed", shadow_rem);
+	imshow("original", img);*/
+
+
 	cvtColor(img, img, CV_BGR2GRAY);
 	imshow("bw", img);
 	medianBlur(img, img, 9);
 	//blur(img,img,Size(3,3));
 	Canny( img, edges, lowThreshold, highThreshold, 3 );
+	imshow("edges", edges);
+
+	//waitKey(0);
 
 	return edges;
 }
