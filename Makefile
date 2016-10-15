@@ -111,6 +111,30 @@ lane_detector/fast:
 	$(MAKE) -f CMakeFiles/lane_detector.dir/build.make CMakeFiles/lane_detector.dir/build
 .PHONY : lane_detector/fast
 
+src/houghP.o: src/houghP.cpp.o
+.PHONY : src/houghP.o
+
+# target to build an object file
+src/houghP.cpp.o:
+	$(MAKE) -f CMakeFiles/lane_detector.dir/build.make CMakeFiles/lane_detector.dir/src/houghP.cpp.o
+.PHONY : src/houghP.cpp.o
+
+src/houghP.i: src/houghP.cpp.i
+.PHONY : src/houghP.i
+
+# target to preprocess a source file
+src/houghP.cpp.i:
+	$(MAKE) -f CMakeFiles/lane_detector.dir/build.make CMakeFiles/lane_detector.dir/src/houghP.cpp.i
+.PHONY : src/houghP.cpp.i
+
+src/houghP.s: src/houghP.cpp.s
+.PHONY : src/houghP.s
+
+# target to generate assembly for a file
+src/houghP.cpp.s:
+	$(MAKE) -f CMakeFiles/lane_detector.dir/build.make CMakeFiles/lane_detector.dir/src/houghP.cpp.s
+.PHONY : src/houghP.cpp.s
+
 src/laneDetector.o: src/laneDetector.cpp.o
 .PHONY : src/laneDetector.o
 
@@ -168,6 +192,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... lane_detector"
 	@echo "... rebuild_cache"
+	@echo "... src/houghP.o"
+	@echo "... src/houghP.i"
+	@echo "... src/houghP.s"
 	@echo "... src/laneDetector.o"
 	@echo "... src/laneDetector.i"
 	@echo "... src/laneDetector.s"

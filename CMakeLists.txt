@@ -9,13 +9,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 set( NAME_SRC
     src/main.cpp
     src/laneDetector_utils.cpp
+    src/houghP.cpp
 )
 
 set( NAME_HEADERS       
      include/laneDetector_utils.h
+     include/houghP.hpp
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
-add_executable(lane_detector src/laneDetector.cpp src/laneDetector_utils.cpp)
+add_executable(lane_detector src/laneDetector.cpp src/laneDetector_utils.cpp src/houghP.cpp)
 target_link_libraries(lane_detector ${OpenCV_LIBRARIES})

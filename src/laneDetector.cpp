@@ -1,4 +1,5 @@
 #include "../include/laneDetector_utils.hpp"
+#include "../include/houghP.hpp"
 
 using namespace cv;
 using namespace std;
@@ -8,6 +9,23 @@ int highThreshold=150;
  
 int main()
 {
+	//Test HoughLinesP2
+	/*Mat test_img=imread("images/test.png", 0);
+	cv::resize(test_img, test_img, cv::Size(500,500));
+	vector<Vec4i> test_lines;
+	vector<int> test_lines_len;
+	HoughLinesP2(test_img, 1, CV_PI/1800, 150, 80, 200, test_lines, test_lines_len, 10);
+	cout<<test_lines.size()<<" "<<test_lines_len.size()<<endl;
+	for(int o=0;o<test_lines.size();o++)
+	{
+		cout<<test_lines[o][0]<<" "<<test_lines[o][1]<<" "<<test_lines[o][2]<<" "<<test_lines[o][3]<<"-"<<test_lines_len[o]<<endl;
+		circle(test_img, {test_lines[o][0], test_lines[o][1]}, 5, Scalar(255), 1, 8, 0);
+		circle(test_img, {test_lines[o][2], test_lines[o][3]}, 5, Scalar(255), 1, 8, 0);
+	}
+	imshow("aaa", test_img);
+	waitKey(0);*/
+
+	
 	//initialize important variables here 
 	int n_segments=5;
 	int segments[5]={75, 140, 215, 250, 320};

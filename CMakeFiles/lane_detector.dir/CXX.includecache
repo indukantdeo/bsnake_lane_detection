@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/home/tejus/Documents/image processing/bsnake_lane_detection/include/houghP.hpp
+opencv/cv.h
+/home/tejus/Documents/image processing/bsnake_lane_detection/include/opencv/cv.h
+opencv2/highgui/highgui.hpp
+-
+bits/stdc++.h
+-
+
 /home/tejus/Documents/image processing/bsnake_lane_detection/include/laneDetector_utils.hpp
 opencv/cv.h
 /home/tejus/Documents/image processing/bsnake_lane_detection/include/opencv/cv.h
@@ -17,4 +25,6 @@ bits/stdc++.h
 /home/tejus/Documents/image processing/bsnake_lane_detection/src/laneDetector.cpp
 ../include/laneDetector_utils.hpp
 /home/tejus/Documents/image processing/bsnake_lane_detection/include/laneDetector_utils.hpp
+../include/houghP.hpp
+/home/tejus/Documents/image processing/bsnake_lane_detection/include/houghP.hpp
 
