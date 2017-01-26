@@ -55,8 +55,8 @@ int main()
 			break;
 	}*/
 
-	Mat edges=find_edges(img);
-	extract_segments(img_segments, edges, segments, n_segments);
+	Mat edges=findEdges(img);
+	extractSegments(img_segments, edges, segments, n_segments);
 
 	int i, j, k;
 
@@ -71,7 +71,7 @@ int main()
   		window_name.str("");
   	}*/
 
-	vector<Vec4i> lines[n_segments];
+	vector<Vec4i> lines[n_segments], lane_lines[n_segments];
 	int hough_threshold[5]={30, 30, 40, 50, 50};
 	int hough_minLineLength[5]={20, 25, 25, 30, 50};
 	for(i=0; i<n_segments ;i++)
@@ -79,7 +79,7 @@ int main()
 
   	Mat line_segments[n_segments];
   	Mat empty=img-img;
-  	extract_segments(line_segments, empty, segments, n_segments);
+  	extractSegments(line_segments, empty, segments, n_segments);
 
 
   	for(i=0;i<n_segments;i++)
@@ -100,7 +100,7 @@ int main()
 
 
   	Mat line=img-img;
-  	merge_segments(line_segments, line, segments, n_segments);
+  	mergeSegments(line_segments, line, segments, n_segments);
   	imshow("detected lines",line);
 
   	for(i=0;i<n_segments;i++)
@@ -108,17 +108,17 @@ int main()
 
   	int vanish_row_vote[2000]={0};
 
-  	int cum_sum=1000;
+  	int h=1000;		//h=height
   	for(i=4;i>=3;i--)
   	{
-  		cum_sum-=segments[i];
+  		h-=segments[i];
   		for(j=0;j<lines[i].size();j++)
   			for(k=0;k<lines[i].size();k++)
   			{
   				if(j==k)
   					continue;
 
-  				int vanish_row=find_intersection(lines[i][j], lines[i][k])+cum_sum;
+  				int vanish_row=findIntersection(lines[i][j], lines[i][k])+h;
 
   				//for checking intersection function
   				/*Mat ci(1000, 1000, CV_8UC3, Scalar(0));
@@ -152,8 +152,6 @@ int main()
   			max_votes=current_votes;
   			max_i=i;
   		}
-
-  		//cout<<i<<" "<<current_votes<<endl;
   	}
 
   	int vanish_row=max_i-25;
@@ -171,22 +169,27 @@ int main()
 
   	Mat lanes(1000, 1000, CV_8UC3, Scalar(0));
   	Mat lanes_segments[n_segments];
-  	extract_segments(lanes_segments, lanes, segments, n_segments);
+  	extractSegments(lanes_segments, lanes, segments, n_segments);
 
-  	cum_sum=1000;
+  	int top_lane_segment=4;
+  	h=0;
   	for(i=4;i>=2;i--)
   	{
-  		cum_sum-=segments[i];
   		for(j=0;j<lines[i].size();j++)
   			for(k=0;k<lines[i].size();k++)
   			{
   				if(j==k)
   					continue;
 
-  				int vanishRow=find_intersection(lines[i][j], lines[i][k])+cum_sum;
+  				int vanishRow=(segments[i]-findIntersection(lines[i][j], lines[i][k]))+h;
 
-  				if(1000-vanishRow>= vanish_row-20 && 1000-vanishRow<= vanish_row+20)
+  				if(vanishRow>= vanish_row-20 && vanishRow<= vanish_row+20)
   				{
+  					top_lane_segment=i;
+  					//warning: lane_lines has duplicates
+  					lane_lines[i].push_back(lines[i][j]);
+  					lane_lines[i].push_back(lines[i][k]);
+
   					cv::line( lanes_segments[i], Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
   					cv::line( lanes_segments[i], Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
   					/*imshow("please", lanes_segments[i]);
@@ -201,8 +204,18 @@ int main()
 
   				}	
   			}
+  		h+=segments[i];
   	}
-  	merge_segments(lanes_segments, lanes, segments, n_segments);
+  	mergeSegments(lanes_segments, lanes, segments, n_segments);
+
+  	vector<Vec4i> center_lane_lines[n_segments];
+  	Point control_points[n_segments];
+  	int lane_center=img.cols/2;
+  	h=0;
+  	for(i=n_segments-1;i>=top_lane_segment;i--)
+  	{
+  		getCenterLanes(segments[i], control_points[i], lane_lines[i], center_lane_lines[i], lane_center);
+  	}
 
   	for(i=1000-vanish_row;i>=0;i--)
   		for(j=0;j<img.cols;j++)
@@ -213,12 +226,13 @@ int main()
   			if(lanes.at<Vec3b>(i, j)[0]==255)
   				img.at<Vec3b>(i, j)={255, 0, 0};
 
-  	cum_sum=0;
+  	//visualizing image splits
+  	/*h=0;
   	for(i=0;i<4;i++)
   	{
-  		cum_sum+=segments[i];
-  		cv::line( img, Point(0, cum_sum), Point(1000, cum_sum), Scalar(0,0,0), 5, CV_AA, 0);
-  	}
+  		h+=segments[i];
+  		cv::line( img, Point(0, h), Point(1000, h), Scalar(0,0,0), 5, CV_AA, 0);
+  	}*/
 
 
   	imshow("original image", img);

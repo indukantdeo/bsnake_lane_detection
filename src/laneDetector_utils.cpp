@@ -8,7 +8,7 @@ using namespace cv;
 extern int lowThreshold;
 extern int highThreshold;
 
-int find_intersection(Vec4i l1, Vec4i l2)
+int findIntersection(Vec4i l1, Vec4i l2)
 {
 	double m1, m2, c1, c2;
 
@@ -30,7 +30,7 @@ int find_intersection(Vec4i l1, Vec4i l2)
 	return (int)yi;
 }
 
-void extract_segments(Mat img_segments[], Mat img,int segments[], int n_segments)
+void extractSegments(Mat img_segments[], Mat img,int segments[], int n_segments)
 {
 	int i, cum_length=0;
 
@@ -47,7 +47,7 @@ void extract_segments(Mat img_segments[], Mat img,int segments[], int n_segments
 	return;
 }
 
-void merge_segments(Mat img_segments[],Mat img, int segments[], int n_segments)
+void mergeSegments(Mat img_segments[],Mat img, int segments[], int n_segments)
 {
 	int i, cum_length=0;
 	img_segments[0].copyTo(img(cv::Rect(0, 0, 1000, segments[0])));
@@ -63,7 +63,7 @@ void merge_segments(Mat img_segments[],Mat img, int segments[], int n_segments)
 	return;
 }
 
-Mat find_edges(Mat img)
+Mat findEdges(Mat img)
 {
 	//directly in single channel
 	Mat edges, img_ycrcb, shadow_rem, shadow, ycrcb_channels[3];
@@ -88,4 +88,9 @@ Mat find_edges(Mat img)
 	//waitKey(0);
 
 	return edges;
+}
+
+void getCenterLanes(int segments_len, Point control_points, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int lane_center)
+{
+	return;
 }

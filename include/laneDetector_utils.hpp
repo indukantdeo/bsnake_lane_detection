@@ -11,9 +11,27 @@ using namespace cv;
 extern int lowThreshold;
 extern int highThreshold;
 
-int find_intersection(Vec4i l1, Vec4i l2);
-void extract_segments(Mat img_segments[], Mat img,int segments[], int n_segments);
-void merge_segments(Mat img_segments[],Mat img, int segments[], int n_segments);
-Mat find_edges(Mat img);
+int findIntersection(Vec4i l1, Vec4i l2);
+void extractSegments(Mat img_segments[], Mat img,int segments[], int n_segments);
+void mergeSegments(Mat img_segments[],Mat img, int segments[], int n_segments);
+Mat findEdges(Mat img);
+void getCenterLanes(int segments_len, Point control_point, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int lane_center);
 
 #endif
+
+
+/*
+Sign Conventions:
+
+findIntersections: gives the distance of the intersection of the two lines from the top of the segment
+
+cv::Line takes points as
+--------->	first co-ordinate
+|
+|
+|
+|
+|
+second co-ordinate
+
+*/
