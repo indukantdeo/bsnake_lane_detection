@@ -32,12 +32,13 @@ int main()
 	Mat img_segments[5];
 	std::stringstream window_name;
 
-	cv::Mat img=cv::imread("images/s1.jpg", CV_LOAD_IMAGE_COLOR);
+	cv::Mat img=cv::imread("images/l3.jpg", CV_LOAD_IMAGE_COLOR);
 	cv::resize(img, img, cv::Size(1000,1000));
 	imshow("lanes", img);
 
 	//img=removeShadow(img);
 
+	/*vary canny paramters
 	int max_lowThreshold=500, max_highThreshold=500;
 	namedWindow("Edge threshold", CV_WINDOW_AUTOSIZE);
 	createTrackbar( "Min Threshold:", "Edge threshold", &lowThreshold, max_lowThreshold);
@@ -52,14 +53,15 @@ int main()
 		char c=(char)waitKey(10);
 		if(c=='q') 
 			break;
-	}
+	}*/
 
+	Mat edges=find_edges(img);
 	extract_segments(img_segments, edges, segments, n_segments);
 
 	int i, j, k;
 
-	/*display edge segments
-	for(i=0;i<n_segments;i++)
+	//display edge segments
+	/*for(i=0;i<n_segments;i++)
 		cout<<img_segments[i].rows<<" "<<img_segments[i].cols<<endl;
 	
 	for(i=0;i<n_segments;i++)
@@ -161,6 +163,7 @@ int main()
   	Mat output(1200, 1000, CV_8UC3, Scalar(0));
   	line.copyTo(output(cv::Rect(0, 200, 1000, 1000)));
   	cv::line( output, Point(0, 1200-vanish_row), Point(1000, 1200-vanish_row), Scalar(255,0,0), 10, CV_AA, 0);
+  	cv::line( img, Point(0, 1000-vanish_row), Point(1000, 1000-vanish_row), Scalar(255,0,0), 10, CV_AA, 0);
   	//line( output, Point(0, 1000-vanish_row), Point(1000, 1000-vanish_row), Scalar(255,0,0), 10, CV_AA);
 
 
@@ -184,10 +187,6 @@ int main()
 
   				if(1000-vanishRow>= vanish_row-20 && 1000-vanishRow<= vanish_row+20)
   				{
-  					if(i==4)
-  						cout<<"yay"<<j<<endl;
-
-
   					cv::line( lanes_segments[i], Point(lines[i][j][0], lines[i][j][1]), Point(lines[i][j][2], lines[i][j][3]), Scalar(255,0,0), 3, CV_AA, 0);
   					cv::line( lanes_segments[i], Point(lines[i][k][0], lines[i][k][1]), Point(lines[i][k][2], lines[i][k][3]), Scalar(255,0,0), 3, CV_AA, 0);
   					/*imshow("please", lanes_segments[i]);
@@ -214,10 +213,16 @@ int main()
   			if(lanes.at<Vec3b>(i, j)[0]==255)
   				img.at<Vec3b>(i, j)={255, 0, 0};
 
+  	cum_sum=0;
+  	for(i=0;i<4;i++)
+  	{
+  		cum_sum+=segments[i];
+  		cv::line( img, Point(0, cum_sum), Point(1000, cum_sum), Scalar(0,0,0), 5, CV_AA, 0);
+  	}
 
-  	imshow("yay", img);
-  	imshow("wohoo!", lanes);
 
+  	imshow("original image", img);
+  	imshow("lanes", lanes);
 	imshow("edges", edges);
 	waitKey(0);
 

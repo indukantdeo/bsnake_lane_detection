@@ -7,6 +7,10 @@ img_gray=cv2.cvtColor(img, code=cv2.COLOR_BGR2GRAY)
 
 print img_gray.shape
 
+for i in range(img_gray.shape[0]):
+	for j in range(img_gray.shape[1]/2):
+		img_gray[i, j]=img_gray[i, j]*0.7
+
 
 lane_width={5, 8, 10, 15, 20, 25, 30, 35}
 
@@ -50,23 +54,38 @@ print lane_points'''
 
 img_filtered*=150'''
 
-img_filtered = np.zeros((480,480), dtype=np.float64)
+'''img_filtered = np.zeros((480,480), dtype=np.float64)
 
 contrast_fiter=np.zeros((1, 25))
 for i in range(25):
 	if i>5 and i<20:
-		contrast_fiter[0,i]=0.1
+		contrast_fiter[0,i]=0.10
 	else:
-		contrast_fiter[0,i]=-0.12
+		contrast_fiter[0,i]=-0.12'''
+
+img_filtered = np.zeros((480,480))
+
+contrast_fiter=np.zeros((1, 25))
+for i in range(25):
+	if i>5 and i<20:
+		contrast_fiter[0,i]=5
+	else:
+		contrast_fiter[0,i]=0
+
+
 
 print contrast_fiter
 
-img_filtered=cv2.filter2D(img_gray, 0, contrast_fiter)
+#img_filtered=cv2.filter2D(img_gray, 0, contrast_fiter)
+img_filtered=cv2.matchTemplate(img_gray, contrast_fiter, cv2.TM_CCOEFF_NORMED)
 print img_filtered
 print img_filtered.max()
 
-low_values_indices = img_filtered < 20  # Where values are low
+low_values_indices = img_filtered < 30  # Where values are low
 img_filtered[low_values_indices] = 0
+
+high_values_indices = img_filtered > 0  # Where values are low
+img_filtered[high_values_indices] = 255
 
 
 cv2.imshow("sdsd", img_gray);

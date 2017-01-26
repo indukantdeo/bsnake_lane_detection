@@ -7,7 +7,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set( NAME_SRC
-    src/main.cpp
+    src/laneDetector.cpp
     src/laneDetector_utils.cpp
     src/houghP.cpp
 )
