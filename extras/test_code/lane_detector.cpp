@@ -232,7 +232,7 @@ int main()
      
       waitKey(10000); 
 
-		  VideoCapture cap("../aa.mp4"); // open the default camera
+		  VideoCapture cap("/home/harshit/bsnake_lane_detection/aa.mp4"); // open the default camera
       if(!cap.isOpened())  // check if we succeeded
         return -1;
 

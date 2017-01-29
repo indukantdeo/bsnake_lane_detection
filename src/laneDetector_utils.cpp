@@ -90,7 +90,63 @@ Mat findEdges(Mat img)
 	return edges;
 }
 
-void getCenterLanes(int segments_len, Point control_points, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int lane_center)
+void getCenterLanes(int segment_h, int segment_len, Point &control_point, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int &lane_center)
 {
+	cout<<"segment dimension: "<<segment_h<<"x"<<segment_len<<"  lane center:"<<lane_center<<endl;
+	cout<<"lane_lines size: "<<lane_lines.size()<<endl;
+	int i;
+	Vector<int> right_lane_centers, left_lane_centers;
+	for(i=0;i<lane_lines.size();i++)
+	{
+		if( lane_lines[i][0]>lane_center && lane_lines[i][2]>lane_center)
+		{
+			right_lane_centers.push_back( (lane_lines[i][0]+lane_lines[i][2])/2  );
+		}
+		else if( lane_lines[i][0]<lane_center && lane_lines[i][2]<lane_center )
+		{
+			left_lane_centers.push_back( (lane_lines[i][0]+lane_lines[i][2])/2 );
+		}			
+	}
+	sort(right_lane_centers.begin(), right_lane_centers.end());
+	sort(left_lane_centers.begin(), left_lane_centers.end());
+	reverse(left_lane_centers.begin(), left_lane_centers.end());
+
+	int right_lane_center=right_lane_centers[0], left_lane_center=left_lane_centers[0];
+	cout<<"right_lane_center "<<right_lane_centers[0]<<" left_lane_center "<<left_lane_centers[0]<<endl;
+	double top_right=0, top_left=0;
+	int right_lines=0, left_lines=0;
+
+	int curve_threshold=50;
+	for(i=0;i<lane_lines.size();i++)
+	{
+		if( lane_lines[i][0]>lane_center && lane_lines[i][2]>lane_center)
+		{
+			if( (lane_lines[i][0]+lane_lines[i][2])/2 < right_lane_center + curve_threshold )
+			{
+				center_lane_lines.push_back(lane_lines[i]);
+				right_lines++;
+				top_right+=(lane_lines[i][2]-lane_lines[i][0])*(-lane_lines[i][1])/(lane_lines[i][3]-lane_lines[i][1])+lane_lines[i][0];
+			}
+		}
+		else if( lane_lines[i][0]<lane_center && lane_lines[i][2]<lane_center )
+		{
+			if( (lane_lines[i][0]+lane_lines[i][2])/2 > left_lane_center - curve_threshold )
+			{
+				center_lane_lines.push_back(lane_lines[i]);
+				left_lines++;
+				top_left+=(lane_lines[i][2]-lane_lines[i][0])*(-lane_lines[i][1])/(lane_lines[i][3]-lane_lines[i][1])+lane_lines[i][0];
+			}
+		}			
+	}
+
+	top_right=(int)top_right/right_lines;
+	top_left=(int)top_left/left_lines;
+
+	lane_center=(top_left+top_right)/2;
+	control_point.x=lane_center;
+
+	cout<<"lane center: "<<lane_center<<endl;
+
 	return;
+		
 }

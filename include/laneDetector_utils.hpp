@@ -15,7 +15,7 @@ int findIntersection(Vec4i l1, Vec4i l2);
 void extractSegments(Mat img_segments[], Mat img,int segments[], int n_segments);
 void mergeSegments(Mat img_segments[],Mat img, int segments[], int n_segments);
 Mat findEdges(Mat img);
-void getCenterLanes(int segments_len, Point control_point, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int lane_center);
+void getCenterLanes(int segment_h, int segment_len, Point &control_point, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int &lane_center);
 
 #endif
 
