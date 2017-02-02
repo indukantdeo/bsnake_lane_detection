@@ -255,8 +255,8 @@ int main()
         Mat transform=transformImage(frame);
         CvMat * ipm,*ipm2;
 
-        imwrite("/home/harshit/AgvLaneDetector/src/test2.png",transform);
-        mcvLoadImage("/home/harshit/AgvLaneDetector/src/test2.png", &ipm, &ipm2);
+        imwrite("test2.png",transform);
+        mcvLoadImage("test2.png", &ipm, &ipm2);
         //Values set approximately resulting in not so clear filtering
         mcvFilterLines(ipm, ipm, 2,2, 2000, 304.8,LINE_VERTICAL);
         

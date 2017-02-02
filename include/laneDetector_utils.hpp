@@ -16,6 +16,7 @@ void extractSegments(Mat img_segments[], Mat img,int segments[], int n_segments)
 void mergeSegments(Mat img_segments[],Mat img, int segments[], int n_segments);
 Mat findEdges(Mat img);
 void getCenterLanes(int segment_h, int segment_len, Point &control_point, Vector<Vec4i> lane_lines, Vector<Vec4i> center_lane_lines,int &lane_center);
+void drawBezierSpline(Mat &img, Point control_points[], int num_control_points, int n_segments);
 
 #endif
 

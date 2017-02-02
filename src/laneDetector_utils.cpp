@@ -148,5 +148,72 @@ void getCenterLanes(int segment_h, int segment_len, Point &control_point, Vector
 	cout<<"lane center: "<<lane_center<<endl;
 
 	return;
-		
 }
+
+void drawBezierSpline(Mat &img, Point control_points[], int num_control_points, int n_segments)
+{
+	if(num_control_points!=4)
+	{
+		cout<<"Error! Spline only parameterized by 4 points"<<endl;
+		return;
+	}
+
+	int x1=control_points[n_segments].y, x2=control_points[n_segments-1].y, x3=control_points[n_segments-2].y, x4=control_points[n_segments-3].y;
+	int y1=control_points[n_segments].x, y2=control_points[n_segments-1].x, y3=control_points[n_segments-2].x, y4=control_points[n_segments-3].x;
+
+	// For bezier spline
+	/*Mat A = (Mat_<float>(4,4) <<
+                   x1*x1*x1, x1*x1, x1, 1,
+                   x4*x4*x4, x4*x4, x4, 1,
+                   3*x1*x1 , 2*x1 , 1 , 0,
+                   3*x4*x4 , 2*x4 , 1 , 0);
+ 
+	Mat B = (Mat_<float>(4,1) <<
+                   y1,
+                   y4,
+                   (y2-y1)/(x2-x1),
+                   (y4-y3)/(x4-x3));*/
+
+    // For cotmull-rom spline
+	Mat A = (Mat_<float>(4,4) <<
+                   x1*x1*x1, x1*x1, x1, 1,
+                   x2*x2*x2, x2*x2, x2, 1,
+                   x3*x3*x3, x3*x3, x3, 1,
+                   x4*x4*x4, x4*x4, x4, 1);
+ 
+	Mat B = (Mat_<float>(4,1) <<
+                   y1,
+                   y2,
+                   y3,
+                   y4);
+
+
+    
+ 
+
+	Mat x;
+	solve(A, B, x);
+
+	//cout<<y1<<" "<<x1*x1*x1*x.at<float>(0, 0)+x1*x1*x.at<float>(0, 1)+x1*x.at<float>(0, 2)+x.at<float>(0, 3)<<endl;
+
+	int i, y;
+	for(i=img.rows-1;i>=y4-100;i--)
+	{
+		y=i*i*i*x.at<float>(0, 0)+i*i*x.at<float>(0, 1)+i*x.at<float>(0, 2)+x.at<float>(0, 3);
+
+		if(y>=0 && y<=img.cols-1)
+		{
+			img.at<Vec3b>(i, y)={0, 0, 255};
+		}
+	}
+
+    return;
+}
+
+// to solve in wolfram alpha:
+// solve a*s^3+b*s^2+c*s+d=t, a*y^3+b*y^2+c*y+d=z, v-t=(u-s)*(3*a*s^2+2*b*s+c), z-x=(y-w)*(3*a*y^2+2*b*y+c) for a, b, c, d
+
+/*a[0]={x1*x1*x1, x1*x1, x1, 1, 0, 0, 0, 0}
+	a[1]={x4*x4*x4, x4*x4, x4, 1, 0, 0, 0, 0}
+	a[2]={3*x1*x1 , 2*x1 , 1 , 0, 0, 0, 0, 0}
+	a[3]={3*x4*x4 , 2*x4 , 1 , 0, 0, 0, 0, 0}*/

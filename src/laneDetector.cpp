@@ -32,7 +32,7 @@ int main()
 	Mat img_segments[5];
 	std::stringstream window_name;
 
-	cv::Mat img=cv::imread("../images/l5.jpg", CV_LOAD_IMAGE_COLOR);
+	cv::Mat img=cv::imread("../images/l3.jpg", CV_LOAD_IMAGE_COLOR);
 	cv::resize(img, img, cv::Size(1000,1000));
 	imshow("lanes", img);
 
@@ -228,9 +228,12 @@ int main()
   	cout<<"After removing duplicated: "; for(i=0;i<=4;i++) cout<<lane_lines[i].size()<<" "; cout<<endl;
 
   	vector<Vec4i> center_lane_lines[n_segments];
-  	Point control_points[n_segments];
+  	Point control_points[n_segments+1];
+  	int num_control_points=1;
   	int lane_center=img.cols/2;
   	h=1000;
+  	circle(img, {img.cols/2, img.rows}, 20, Scalar(0, 0, 255), 5, 8, 0);
+  	control_points[n_segments]={img.cols/2, img.rows};
   	for(i=n_segments-1;i>=top_lane_segment;i--)
   	{
   		h-=segments[i];
@@ -238,8 +241,12 @@ int main()
   		control_points[i].y=h;
   		getCenterLanes(segments[i], img.cols, control_points[i], lane_lines[i], center_lane_lines[i], lane_center);
   		circle(img, control_points[i], 20, Scalar(0, 0, 255), 5, 8, 0);
+  		num_control_points++;
   		cout<<control_points[i].x<<" "<<control_points[i].y<<endl;
   	}
+
+  	drawBezierSpline(img, control_points, num_control_points, n_segments);
+  	cout<<"spline drawn"<<endl;
 
   	for(i=1000-vanish_row;i>=0;i--)
   		for(j=0;j<img.cols;j++)
