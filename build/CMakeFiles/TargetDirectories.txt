@@ -1,1 +1,0 @@
-/home/tejus/Documents/vision/bsnake_lane_detection/build/CMakeFiles/lane_detector.dir

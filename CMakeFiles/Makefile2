@@ -47,10 +47,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/tejus/Documents/image processing/bsnake_lane_detection"
+CMAKE_SOURCE_DIR = /home/tejus/Documents/vision/bsnake_lane_detection
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/tejus/Documents/image processing/bsnake_lane_detection"
+CMAKE_BINARY_DIR = /home/tejus/Documents/vision/bsnake_lane_detection
 
 #=============================================================================
 # Target rules for target CMakeFiles/lane_detector.dir
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = "/home/tejus/Documents/image processing/bsnake_lane_detection
 CMakeFiles/lane_detector.dir/all:
 	$(MAKE) -f CMakeFiles/lane_detector.dir/build.make CMakeFiles/lane_detector.dir/depend
 	$(MAKE) -f CMakeFiles/lane_detector.dir/build.make CMakeFiles/lane_detector.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report "/home/tejus/Documents/image processing/bsnake_lane_detection/CMakeFiles"  1 2 3
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tejus/Documents/vision/bsnake_lane_detection/CMakeFiles  1 2 3
 	@echo "Built target lane_detector"
 .PHONY : CMakeFiles/lane_detector.dir/all
 
@@ -69,9 +69,9 @@ all: CMakeFiles/lane_detector.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/lane_detector.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/tejus/Documents/image processing/bsnake_lane_detection/CMakeFiles" 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tejus/Documents/vision/bsnake_lane_detection/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/lane_detector.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/tejus/Documents/image processing/bsnake_lane_detection/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tejus/Documents/vision/bsnake_lane_detection/CMakeFiles 0
 .PHONY : CMakeFiles/lane_detector.dir/rule
 
 # Convenience name for target.
