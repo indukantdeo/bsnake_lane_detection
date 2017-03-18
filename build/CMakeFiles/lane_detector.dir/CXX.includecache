@@ -6,6 +6,28 @@
 
 #IncludeRegexTransform: 
 
+/home/tejus/Documents/vision/bsnake_lane_detection/include/houghP.hpp
+opencv/cv.h
+/home/tejus/Documents/vision/bsnake_lane_detection/include/opencv/cv.h
+opencv2/highgui/highgui.hpp
+-
+bits/stdc++.h
+-
+
+/home/tejus/Documents/vision/bsnake_lane_detection/include/laneDetector_utils.hpp
+opencv/cv.h
+/home/tejus/Documents/vision/bsnake_lane_detection/include/opencv/cv.h
+opencv2/highgui/highgui.hpp
+-
+bits/stdc++.h
+-
+
+/home/tejus/Documents/vision/bsnake_lane_detection/src/laneDetector.cpp
+../include/laneDetector_utils.hpp
+/home/tejus/Documents/vision/bsnake_lane_detection/include/laneDetector_utils.hpp
+../include/houghP.hpp
+/home/tejus/Documents/vision/bsnake_lane_detection/include/houghP.hpp
+
 /home/tejus/Documents/vision/bsnake_lane_detection/src/laneDetector_utils.cpp
 opencv/cv.h
 /home/tejus/Documents/vision/bsnake_lane_detection/src/opencv/cv.h
